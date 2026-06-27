@@ -3,7 +3,9 @@ package agh.darwinworld.presenters;
 import agh.darwinworld.Simulation;
 import agh.darwinworld.controls.CellRegion;
 import agh.darwinworld.helpers.AlertHelper;
-import agh.darwinworld.models.*;
+import agh.darwinworld.models.MoveDirection;
+import agh.darwinworld.models.SimulationParameters;
+import agh.darwinworld.models.Vector2D;
 import agh.darwinworld.models.animals.Animal;
 import agh.darwinworld.models.listeners.AnimalListener;
 import agh.darwinworld.models.listeners.SimulationPauseListener;
@@ -11,7 +13,8 @@ import agh.darwinworld.models.listeners.SimulationStepListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,7 +29,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
@@ -37,7 +45,11 @@ import javafx.util.Pair;
 
 import java.beans.PropertyChangeEvent;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
@@ -473,7 +485,8 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
                         }
                     });
                 } else {
-                    cells.get(new Vector2D(i, j)).updateIndicator(false);
+                    CellRegion cell = cells.get(new Vector2D(i, j));
+                    if (cell != null) cell.updateIndicator(false);
                 }
             }
         }

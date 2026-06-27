@@ -12,11 +12,14 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 /**
  * A utility class for stages.
  */
 public class StageHelper {
+    private static final Logger logger = Logger.getLogger(StageHelper.class.getName());
+
     /**
      * Checks stage's decoration insets.
      *
@@ -77,11 +80,15 @@ public class StageHelper {
         String os = System.getProperty("os.name").toLowerCase();
         if (!os.contains("win")) return;
         WinDef.HWND hwnd = getNativeHandleForWindow(stage);
+        if (hwnd == null) {
+            logger.warning("Cannot set dark mode: native window handle is unavailable.");
+            return;
+        }
         Dwmapi dwmapi = Dwmapi.INSTANCE;
         WinDef.BOOLByReference darkModeRef = new WinDef.BOOLByReference(new WinDef.BOOL(darkMode));
         int result = dwmapi.DwmSetWindowAttribute(hwnd, 20, darkModeRef, Native.getNativeSize(WinDef.BOOLByReference.class));
         if (result != 0)
-            System.out.println("Failed to set dark Mode!");
+            logger.warning("DwmSetWindowAttribute failed with code: " + result);
     }
 
 
@@ -95,7 +102,7 @@ public class StageHelper {
             final Pointer pointer = new Pointer((Long) getRawHandle.invoke(tkStage));
             return new WinDef.HWND(pointer);
         } catch (Exception ex) {
-            System.err.println("Unable to determine native handle for window");
+            logger.warning("Unable to determine native handle for window: " + ex.getMessage());
             return null;
         }
     }

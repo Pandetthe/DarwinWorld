@@ -1,18 +1,33 @@
 package agh.darwinworld.models.maps;
 
-import agh.darwinworld.models.*;
+import agh.darwinworld.models.MoveDirection;
+import agh.darwinworld.models.SimulationParameters;
+import agh.darwinworld.models.Vector2D;
 import agh.darwinworld.models.animals.Animal;
 import agh.darwinworld.models.animals.AnimalType;
 import agh.darwinworld.models.listeners.MovementHandler;
 import agh.darwinworld.models.listeners.SimulationStepListener;
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Base class for all map implementations.
  */
 public abstract class AbstractMap implements MovementHandler {
+    private static final float EQUATOR_HEIGHT_RATIO = 0.2f;
+    private static final float NON_PREFERRED_PLANT_RATIO = 0.2f;
+
     protected int deadCount = 0;
     protected int totalLifetime = 0;
     protected HashMap<Vector2D, ArrayList<Animal>> animals = new HashMap<>();
@@ -86,7 +101,7 @@ public abstract class AbstractMap implements MovementHandler {
      * @return True if the row is preferred, false otherwise.
      */
     public boolean isPreferredRow(int row) {
-        int equatorHeight = Math.round(params.height() * 0.2f);
+        int equatorHeight = Math.round(params.height() * EQUATOR_HEIGHT_RATIO);
         int barHeight = Math.round((params.height() - equatorHeight) / 2f);
         return row >= barHeight && row < barHeight + equatorHeight;
     }
@@ -216,7 +231,8 @@ public abstract class AbstractMap implements MovementHandler {
         List<Vector2D> toRemove = new ArrayList<>();
         for (Vector2D position : plants) {
             if (!animals.containsKey(position)) continue;
-            Animal topAnimal = animals.get(position).stream().max(Comparator.comparingInt(Animal::getEnergy)).orElseThrow();
+            Animal topAnimal = animals.get(position).stream().max(Comparator.comparingInt(Animal::getEnergy))
+                .orElseThrow(() -> new NoSuchElementException("No animal found at position " + position));
             topAnimal.eat(params.plantEnergyAmount(), step);
             toRemove.add(position);
             listeners.forEach(listener -> listener.removePlant(position));
@@ -230,7 +246,7 @@ public abstract class AbstractMap implements MovementHandler {
      * @param amount the total number of plants to grow
      */
     public void growPlants(int amount) {
-        int equatorHeight = Math.round(params.height() * 0.2f);
+        int equatorHeight = Math.round(params.height() * EQUATOR_HEIGHT_RATIO);
         int barHeight = Math.round((params.height() - equatorHeight) / 2f);
         List<Vector2D> plantCandidates = new ArrayList<>();
         for (int i = 0; i < params.width(); i++) {
@@ -245,7 +261,7 @@ public abstract class AbstractMap implements MovementHandler {
                 }
             }
         }
-        plants.addAll(selectRandom(plantCandidates, Math.round(amount * 0.2f)));
+        plants.addAll(selectRandom(plantCandidates, Math.round(amount * NON_PREFERRED_PLANT_RATIO)));
         plantCandidates = new ArrayList<>();
         for (int i = 0; i < params.width(); i++) {
             for (int j = barHeight; j < barHeight + equatorHeight; j++) {
@@ -254,7 +270,7 @@ public abstract class AbstractMap implements MovementHandler {
                 }
             }
         }
-        plants.addAll(selectRandom(plantCandidates, Math.round((amount) * 0.8f)));
+        plants.addAll(selectRandom(plantCandidates, Math.round(amount * (1f - NON_PREFERRED_PLANT_RATIO))));
         for (Vector2D position : plants) {
             listeners.forEach(listener -> listener.addPlant(position));
         }

@@ -4,7 +4,8 @@ import agh.darwinworld.Simulation;
 import agh.darwinworld.controls.IntField;
 import agh.darwinworld.helpers.AlertHelper;
 import agh.darwinworld.helpers.StageHelper;
-import agh.darwinworld.models.*;
+import agh.darwinworld.models.CsvPrinter;
+import agh.darwinworld.models.SimulationParameters;
 import agh.darwinworld.models.animals.AnimalType;
 import agh.darwinworld.models.exceptions.UserFriendlyException;
 import agh.darwinworld.models.maps.MapType;
@@ -17,15 +18,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class StartMenuPresenter implements Initializable {
@@ -82,7 +91,19 @@ public class StartMenuPresenter implements Initializable {
 
     private CsvPrinter csvListener;
     private List<String> saves;
-    private final File dir = new File(System.getenv("APPDATA") + "/DarwinWorld");
+    private final File dir = getConfigDir();
+
+    private static File getConfigDir() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            String appData = System.getenv("APPDATA");
+            return new File(appData != null ? appData : System.getProperty("user.home"), "DarwinWorld");
+        } else if (os.contains("mac")) {
+            return new File(System.getProperty("user.home"), "Library/Application Support/DarwinWorld");
+        } else {
+            return new File(System.getProperty("user.home"), ".darwinworld");
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,7 +137,7 @@ public class StartMenuPresenter implements Initializable {
 
     public void onSimulationStart(ActionEvent actionEvent) {
         Stage currentStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        assert currentStage != null;
+        Objects.requireNonNull(currentStage, "currentStage must not be null");
         try {
             MapType mapType = mapTypeComboBox.getSelectionModel().getSelectedItem();
             AnimalType animalType = behaviourComboBox.getSelectionModel().getSelectedItem();

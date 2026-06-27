@@ -8,7 +8,12 @@ import agh.darwinworld.models.listeners.MovementHandler;
 import javafx.util.Pair;
 
 import java.beans.PropertyChangeEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**

@@ -1,15 +1,19 @@
 package agh.darwinworld;
 
-import agh.darwinworld.models.*;
+import agh.darwinworld.models.SimulationParameters;
 import agh.darwinworld.models.listeners.SimulationStepListener;
 import agh.darwinworld.models.maps.AbstractMap;
 import agh.darwinworld.presenters.SimulationPresenter;
+
+import java.util.logging.Logger;
 
 /**
  * The {@code Simulation} class represents a runnable simulation of a Darwinian world.
  * It manages the lifecycle of the simulation and interacts with the map and its elements.
  */
 public class Simulation implements Runnable {
+    private static final Logger logger = Logger.getLogger(Simulation.class.getName());
+
     private final SimulationParameters params;
     private final AbstractMap map;
 
@@ -45,14 +49,14 @@ public class Simulation implements Runnable {
                 long deltaTime = System.currentTimeMillis();
                 map.step(step);
                 long elapsed = System.currentTimeMillis() - deltaTime;
-                System.out.println("Step " + step + " took " + elapsed + "ms");
+                logger.fine("Step " + step + " took " + elapsed + "ms");
                 step++;
             }
             try {
                 //noinspection BusyWait
                 Thread.sleep(this.params.refreshTime());
             } catch (InterruptedException e) {
-                System.out.println("Stopping simulation loop's sleep!");
+                logger.fine("Stopping simulation loop's sleep!");
                 return;
             }
         }

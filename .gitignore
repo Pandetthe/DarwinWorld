@@ -40,3 +40,14 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Local overrides ###
+gradle.properties
+
+### Logs ###
+*.log
+
+### Editor backups ###
+*.swp
+*.swo
+*~
