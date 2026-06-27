@@ -12,7 +12,7 @@
     <right>
         <GridPane alignment="CENTER" hgap="10.0" styleClass="background" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" prefWidth="200.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
                 <ColumnConstraints hgrow="ALWAYS" minWidth="150.0" prefWidth="180.0"/>
             </columnConstraints>
             <rowConstraints>
