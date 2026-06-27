@@ -284,12 +284,12 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         boolean showGridLines = mapGrid.isGridLinesVisible();
         mapGrid.setGridLinesVisible(false);
         for (ColumnConstraints col : mapGrid.getColumnConstraints()) {
-            col.setMinWidth(cellSize);
+            col.setMinWidth(0);
             col.setPrefWidth(cellSize);
             col.setMaxWidth(cellSize);
         }
         for (RowConstraints row : mapGrid.getRowConstraints()) {
-            row.setMinHeight(cellSize);
+            row.setMinHeight(0);
             row.setPrefHeight(cellSize);
             row.setMaxHeight(cellSize);
         }
@@ -357,10 +357,10 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
                 }
                 lastCalculatedCellSize = calculateCellSize();
                 ArrayList<ColumnConstraints> columnConstraints = new ArrayList<>();
-                ColumnConstraints cc = new ColumnConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
+                ColumnConstraints cc = new ColumnConstraints(0, lastCalculatedCellSize, lastCalculatedCellSize);
                 for (int i = 0; i <= p.width(); i++) columnConstraints.add(cc);
                 ArrayList<RowConstraints> rowConstraints = new ArrayList<>();
-                RowConstraints rc = new RowConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
+                RowConstraints rc = new RowConstraints(0, lastCalculatedCellSize, lastCalculatedCellSize);
                 for (int j = 0; j <= p.height(); j++) rowConstraints.add(rc);
 
                 if (!mapGrid.getChildren().isEmpty())
