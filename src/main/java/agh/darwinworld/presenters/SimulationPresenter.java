@@ -149,8 +149,8 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rootBorderPane.widthProperty().addListener((observable, oldValue, newValue) -> resizeMap());
-        rootBorderPane.heightProperty().addListener((observable, oldValue, newValue) -> resizeMap());
+        mapGrid.widthProperty().addListener((observable, oldValue, newValue) -> resizeMap());
+        mapGrid.heightProperty().addListener((observable, oldValue, newValue) -> resizeMap());
         selectedAnimalGridPane.setVisible(false);
         Platform.runLater(() -> {
             Stage stage = (Stage) rootBorderPane.getScene().getWindow();
@@ -223,6 +223,15 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         this.simulation = simulation;
         this.simulation.addStepListener(this);
         unselectAnimal();
+        SimulationParameters initParams = simulation.getParameters();
+        final double targetCellSize = 20.0;
+        final double divider = 0.35;
+        final double minLeft = 350.0;
+        double mapAreaWidth = targetCellSize * (initParams.width() + 1);
+        double mapAreaHeight = targetCellSize * (initParams.height() + 1);
+        double totalWidth = Math.max(minLeft + mapAreaWidth + 8, minLeft / divider);
+        rootBorderPane.setPrefWidth(totalWidth);
+        rootBorderPane.setPrefHeight(mapAreaHeight + 120 + 20);
         Platform.runLater(() -> {
             SimulationParameters p = simulation.getParameters();
             heightLabel.setText(Integer.toString(p.height()));
@@ -258,14 +267,10 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
     }
 
     public double calculateCellSize() {
-        double gridWidth = rootBorderPane.getWidth() - leftVBox.getWidth() - 20; // 20 - padding
-        double gridHeight = rootBorderPane.getHeight() - topVBox.getHeight() - 20; // 20 - padding
         SimulationParameters p = simulation.getParameters();
         int rowCount = p.width() + 1;
         int colCount = p.height() + 1;
-        double width = gridWidth / rowCount;
-        double height = gridHeight / colCount;
-        return Math.min(height, width);
+        return Math.min(mapGrid.getWidth() / rowCount, mapGrid.getHeight() / colCount);
     }
 
     public void resizeMap() {

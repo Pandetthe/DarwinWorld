@@ -38,10 +38,7 @@
                 <RowConstraints/>
                 <RowConstraints vgrow="ALWAYS"/>
             </rowConstraints>
-            <Label text="Properties" GridPane.columnSpan="2" GridPane.halignment="CENTER">
-                <font>
-                    <Font name="System Bold" size="20.0"/>
-                </font>
+            <Label text="Properties" GridPane.columnSpan="2" GridPane.halignment="CENTER" style="-fx-font-weight: bold; -fx-font-size: 1.4em;">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>

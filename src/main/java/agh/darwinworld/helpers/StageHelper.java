@@ -7,6 +7,7 @@ import com.sun.jna.platform.win32.WinDef;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -44,7 +45,15 @@ public class StageHelper {
      * @param stage instance of the stage.
      * @param root  root element of the scene.
      */
+    private static final int BASE_FONT_PX;
+
+    static {
+        double scale = Math.max(1.0, Screen.getPrimary().getDpi() / 96.0);
+        BASE_FONT_PX = (int) Math.round(14 * scale);
+    }
+
     public static void bindMinSize(Stage stage, Pane root) {
+        root.setStyle("-fx-font-size: " + BASE_FONT_PX + "px;");
         EventHandler<WindowEvent> oldOnShown = stage.getOnShown();
         stage.setOnShown(e -> {
             if (oldOnShown != null)
