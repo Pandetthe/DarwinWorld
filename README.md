@@ -2,6 +2,8 @@
 
 A JavaFX desktop simulation of evolution in a virtual world, built as a university project for **Programowanie Obiektowe (Object-Oriented Programming)** at AGH University of Krakow, Faculty of Computer Science.
 
+<img src="docs/screenshot_menu.png" width="49%" /><img src="docs/simulation_demo.gif" width="49%" />
+
 Full assignment specification (in Polish): [docs/assignement/README.md](docs/assignement/README.md)
 
 
@@ -29,7 +31,9 @@ Each turn, an animal may skip its move while still consuming energy. The skip pr
 Requires Java 21 (see `.mise.toml`).
 
 ```bash
-./gradlew run    # run the application
-./gradlew build  # build
-./gradlew test   # run tests only
+./gradlew run         # run the application
+./gradlew build       # build
+./gradlew test        # run tests only
+./gradlew jpackage    # native installer (.exe / .deb / .dmg)
+./gradlew runtimeZip  # self-contained runtime image (zipped)
 ```
