@@ -40,7 +40,7 @@ public class SimulationParametersTest {
     public void testConstructorHeightTooHigh() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new SimulationParameters(
-                        50, 101, 10,
+                        50, 51, 10,
                         5, 10, 20,
                         100, 50, 20,
                         0, 8, 8,
@@ -48,7 +48,7 @@ public class SimulationParametersTest {
                         12345, MapType.WORLD, AnimalType.ANIMAL
                 )
         );
-        assertTrue(exception.getMessage().contains("Height must be less than or equal to 100."));
+        assertTrue(exception.getMessage().contains("Height must be less than or equal to 50."));
     }
 
     @Test

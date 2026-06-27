@@ -58,7 +58,7 @@ public record SimulationParameters(
      */
     public SimulationParameters {
         validateInt(width, "Width", 1, 100);
-        validateInt(height, "Height", 1, 100);
+        validateInt(height, "Height", 1, 50);
         validateInt(startingPlantAmount, "Amount of plants spawning at the start", 0, null);
         validateInt(plantGrowingAmount, "Amount of plants growing each step", 0, null);
         validateInt(plantEnergyAmount, "Plant energy profit", 0, null);
@@ -149,7 +149,7 @@ public record SimulationParameters(
         }
         return new SimulationParameters(
                 getValidatedIntField(width, "Width", 1, 100),
-                getValidatedIntField(height, "Height", 1, 100),
+                getValidatedIntField(height, "Height", 1, 50),
                 getValidatedIntField(startingPlantAmount, "Amount of plants spawning at the start", 0, null),
                 getValidatedIntField(plantGrowingAmount, "Amount of plants growing each step", 0, null),
                 getValidatedIntField(plantEnergyAmount, "Plant energy profit", 0, null),
