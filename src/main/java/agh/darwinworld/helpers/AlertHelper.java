@@ -74,7 +74,7 @@ public class AlertHelper {
         StageHelper.setDarkMode(alert.getDialogPane().getScene().getWindow(), darkMode);
     }
 
-    public static boolean showConfirmationAlert(Window owner, String header, String content) {
+public static boolean showConfirmationAlert(Window owner, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initOwner(owner);
         alert.setTitle("Confirmation");
