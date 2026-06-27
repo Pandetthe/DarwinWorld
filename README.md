@@ -2,7 +2,7 @@
 
 A JavaFX desktop simulation of evolution in a virtual world, built as a university project for **Programowanie Obiektowe (Object-Oriented Programming)** at AGH University of Krakow, Faculty of Computer Science.
 
-<img src="docs/screenshot_menu.png" width="49%" /><img src="docs/simulation_demo.gif" width="49%" />
+<img src="docs/screenshot_menu.png" width="48%"/> <img src="docs/simulation_demo.gif" width="48%"/>
 
 Full assignment specification (in Polish): [docs/assignement/README.md](docs/assignement/README.md)
 
