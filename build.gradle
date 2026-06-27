@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '3.0.1'
 }
 
 java {
@@ -19,11 +20,12 @@ repositories {
 
 javafx {
     version = "17.0.12"
-    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
+    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media']
 }
 
 application {
     getMainClass().set('agh.darwinworld.App')
+    getMainModule().set('DarwinWorld')
 }
 
 tasks.withType(JavaExec).configureEach {
@@ -39,7 +41,7 @@ tasks.withType(JavaExec).configureEach {
                     .asPath
             if (jfxJars) {
                 jvmArgs '--module-path', jfxJars
-                jvmArgs '--add-modules', 'javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web'
+                jvmArgs '--add-modules', 'javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media'
             }
         }
     }
@@ -59,4 +61,22 @@ tasks.withType(JavaCompile).configureEach {
 
 test {
     useJUnitPlatform()
+}
+
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+    targetPlatform("windows-x64") {
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_windows_hotspot_21.0.2_13.zip")
+    }
+    targetPlatform("mac-x64") {
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_mac_hotspot_21.0.2_13.tar.gz")
+    }
+    targetPlatform("linux-x64") {
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_linux_hotspot_21.0.2_13.tar.gz")
+    }
+
+    launcher {
+        name = 'DarwinWorld'
+    }
 }

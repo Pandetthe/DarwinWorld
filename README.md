@@ -34,6 +34,5 @@ Requires Java 21 (see `.mise.toml`).
 ./gradlew run         # run the application
 ./gradlew build       # build
 ./gradlew test        # run tests only
-./gradlew jpackage    # native installer (.exe / .deb / .dmg)
-./gradlew runtimeZip  # self-contained runtime image (zipped)
+./gradlew jlinkZip    # self-contained cross-platform runtime images (zipped)
 ```
