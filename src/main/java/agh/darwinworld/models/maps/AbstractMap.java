@@ -261,7 +261,8 @@ public abstract class AbstractMap implements MovementHandler {
                 }
             }
         }
-        plants.addAll(selectRandom(plantCandidates, Math.round(amount * NON_PREFERRED_PLANT_RATIO)));
+        List<Vector2D> newPlants = new ArrayList<>(selectRandom(plantCandidates, Math.round(amount * NON_PREFERRED_PLANT_RATIO)));
+        plants.addAll(newPlants);
         plantCandidates = new ArrayList<>();
         for (int i = 0; i < params.width(); i++) {
             for (int j = barHeight; j < barHeight + equatorHeight; j++) {
@@ -270,8 +271,10 @@ public abstract class AbstractMap implements MovementHandler {
                 }
             }
         }
-        plants.addAll(selectRandom(plantCandidates, Math.round(amount * (1f - NON_PREFERRED_PLANT_RATIO))));
-        for (Vector2D position : plants) {
+        List<Vector2D> newPreferredPlants = selectRandom(plantCandidates, Math.round(amount * (1f - NON_PREFERRED_PLANT_RATIO)));
+        plants.addAll(newPreferredPlants);
+        newPlants.addAll(newPreferredPlants);
+        for (Vector2D position : newPlants) {
             listeners.forEach(listener -> listener.addPlant(position));
         }
     }

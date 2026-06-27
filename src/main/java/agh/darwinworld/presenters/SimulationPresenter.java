@@ -10,8 +10,6 @@ import agh.darwinworld.models.animals.Animal;
 import agh.darwinworld.models.listeners.AnimalListener;
 import agh.darwinworld.models.listeners.SimulationPauseListener;
 import agh.darwinworld.models.listeners.SimulationStepListener;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -38,9 +37,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.beans.PropertyChangeEvent;
@@ -152,6 +151,7 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         mapGrid.widthProperty().addListener((observable, oldValue, newValue) -> resizeMap());
         mapGrid.heightProperty().addListener((observable, oldValue, newValue) -> resizeMap());
         selectedAnimalGridPane.setVisible(false);
+        selectedAnimalGridPane.setManaged(false);
         Platform.runLater(() -> {
             Stage stage = (Stage) rootBorderPane.getScene().getWindow();
             stage.setOnCloseRequest(windowEvent -> stopSimulationThread());
@@ -185,6 +185,7 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         if (cell != null)
             cell.setIsSelected(true);
         selectedAnimalGridPane.setVisible(true);
+        selectedAnimalGridPane.setManaged(true);
         selectedAnimalAgeLabel.setText(Integer.toString(selectedAnimal.getAge()));
         if (selectedAnimal.isDead()) {
             selectedAnimalEnergyOrDiedAtLabel.setText("Died at:");
@@ -213,6 +214,7 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         }
         selectedAnimalPos = null;
         selectedAnimalGridPane.setVisible(false);
+        selectedAnimalGridPane.setManaged(false);
     }
 
     public void setSimulation(Simulation simulation) {
@@ -230,8 +232,10 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
         double mapAreaWidth = targetCellSize * (initParams.width() + 1);
         double mapAreaHeight = targetCellSize * (initParams.height() + 1);
         double totalWidth = Math.max(minLeft + mapAreaWidth + 8, minLeft / divider);
-        rootBorderPane.setPrefWidth(totalWidth);
-        rootBorderPane.setPrefHeight(mapAreaHeight + 120 + 20);
+        double totalHeight = mapAreaHeight + 120 + 20;
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        rootBorderPane.setPrefWidth(Math.min(totalWidth, screenBounds.getWidth() * 0.95));
+        rootBorderPane.setPrefHeight(Math.min(totalHeight, screenBounds.getHeight() * 0.95));
         Platform.runLater(() -> {
             SimulationParameters p = simulation.getParameters();
             heightLabel.setText(Integer.toString(p.height()));
@@ -275,7 +279,7 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
 
     public void resizeMap() {
         double cellSize = calculateCellSize();
-        if (lastCalculatedCellSize == cellSize) return;
+        if (cellSize <= 0 || lastCalculatedCellSize == cellSize) return;
         lastCalculatedCellSize = cellSize;
         boolean showGridLines = mapGrid.isGridLinesVisible();
         mapGrid.setGridLinesVisible(false);
@@ -319,73 +323,56 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
 
     public void drawMap() {
         SimulationParameters p = simulation.getParameters();
-        cells = new HashMap<>();
         int maxAnimalAmount = simulation.getMap().getMaxAnimalAmount();
         int maxFireLength = p.fireLength();
-        for (int i = 0; i < p.width(); i++) {
-            for (int j = 0; j < p.height(); j++) {
-                Vector2D pos = new Vector2D(i, p.height() - j - 1);
-                int animalAmount = simulation.getMap().getAnimalsOnPosition(pos).size();
-                boolean isPlant = simulation.getMap().isPlantOnPosition(pos);
-                int energy = simulation.getMap().getEnergyOnPosition(pos);
-                CellRegion cell = new CellRegion(isPlant, animalAmount, maxAnimalAmount, 0, maxFireLength, energy);
-                GridPane.setHgrow(cell, Priority.ALWAYS);
-                GridPane.setVgrow(cell, Priority.ALWAYS);
-                GridPane.setColumnIndex(cell, i + 1);
-                GridPane.setRowIndex(cell, j + 1);
-                cells.put(pos, cell);
-                cell.setOnMouseClicked(mouseEvent -> handleCellClick(mouseEvent, pos));
+
+        Thread buildThread = new Thread(() -> {
+            HashMap<Vector2D, CellRegion> newCells = new HashMap<>();
+            ArrayList<Node> cellsToAdd = new ArrayList<>();
+            for (int i = 0; i < p.width(); i++) {
+                for (int j = 0; j < p.height(); j++) {
+                    Vector2D pos = new Vector2D(i, p.height() - j - 1);
+                    int animalAmount = simulation.getMap().getAnimalsOnPosition(pos).size();
+                    boolean isPlant = simulation.getMap().isPlantOnPosition(pos);
+                    int energy = simulation.getMap().getEnergyOnPosition(pos);
+                    CellRegion cell = new CellRegion(isPlant, animalAmount, maxAnimalAmount, 0, maxFireLength, energy);
+                    GridPane.setHgrow(cell, Priority.ALWAYS);
+                    GridPane.setVgrow(cell, Priority.ALWAYS);
+                    GridPane.setColumnIndex(cell, i + 1);
+                    GridPane.setRowIndex(cell, j + 1);
+                    newCells.put(pos, cell);
+                    cell.setOnMouseClicked(mouseEvent -> handleCellClick(mouseEvent, pos));
+                    cellsToAdd.add(cell);
+                }
             }
-        }
-        ArrayList<Node> cellsToAdd = new ArrayList<>(cells.values());
-        cellsToAdd.add(createLabelCell("y/x", 0, 0));
-        for (int i = 0; i < p.width(); i++) {
-            cellsToAdd.add(createLabelCell(Integer.toString(i), i + 1, 0));
-        }
-        for (int j = 0; j < p.height(); j++) {
-            cellsToAdd.add(createLabelCell(Integer.toString(p.height() - j - 1), 0, j + 1));
-        }
-        lastCalculatedCellSize = calculateCellSize();
-        ArrayList<ColumnConstraints> columnConstraints = new ArrayList<>();
-        ColumnConstraints cc = new ColumnConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
-        for (int i = 0; i <= p.width(); i++) {
-            columnConstraints.add(cc);
-        }
-        ArrayList<RowConstraints> rowConstraints = new ArrayList<>();
-        RowConstraints rc = new RowConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
-        for (int j = 0; j <= p.height(); j++) {
-            rowConstraints.add(rc);
-        }
-        Platform.runLater(() -> {
-            mapGrid.setDisable(true);
-            if (!mapGrid.getChildren().isEmpty())
-                mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
-            mapGrid.getColumnConstraints().setAll(columnConstraints);
-            mapGrid.getRowConstraints().setAll(rowConstraints);
-            mapGrid.setDisable(false);
-        });
-        int chunkSize = 25;
-        int totalCells = cellsToAdd.size();
-        final int[] index = {0};
-        Timeline timeline = new Timeline();
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(Math.max(totalCells / chunkSize / 20, 1)), event -> {
-            int start = index[0];
-            int end = Math.min(start + chunkSize, totalCells);
-            ArrayList<Node> batch = new ArrayList<>(cellsToAdd.subList(start, end));
+
             Platform.runLater(() -> {
-                mapGrid.setDisable(true);
-                mapGrid.getChildren().addAll(batch);
-                mapGrid.setDisable(false);
+                cells = newCells;
+                cellsToAdd.add(createLabelCell("y/x", 0, 0));
+                for (int i = 0; i < p.width(); i++) {
+                    cellsToAdd.add(createLabelCell(Integer.toString(i), i + 1, 0));
+                }
+                for (int j = 0; j < p.height(); j++) {
+                    cellsToAdd.add(createLabelCell(Integer.toString(p.height() - j - 1), 0, j + 1));
+                }
+                lastCalculatedCellSize = calculateCellSize();
+                ArrayList<ColumnConstraints> columnConstraints = new ArrayList<>();
+                ColumnConstraints cc = new ColumnConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
+                for (int i = 0; i <= p.width(); i++) columnConstraints.add(cc);
+                ArrayList<RowConstraints> rowConstraints = new ArrayList<>();
+                RowConstraints rc = new RowConstraints(lastCalculatedCellSize, lastCalculatedCellSize, lastCalculatedCellSize);
+                for (int j = 0; j <= p.height(); j++) rowConstraints.add(rc);
+
+                if (!mapGrid.getChildren().isEmpty())
+                    mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
+                mapGrid.getColumnConstraints().setAll(columnConstraints);
+                mapGrid.getRowConstraints().setAll(rowConstraints);
+                mapGrid.getChildren().addAll(cellsToAdd);
+                setShowPopularGenome(true);
             });
-            index[0] = end;
-            if (index[0] >= totalCells) {
-                timeline.stop();
-            }
         });
-        timeline.getKeyFrames().add(keyFrame);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-        setShowPopularGenome(true);
+        buildThread.setDaemon(true);
+        buildThread.start();
     }
 
     private void handleCellClick(MouseEvent mouseEvent, Vector2D pos) {
@@ -476,22 +463,13 @@ public class SimulationPresenter implements Initializable, SimulationStepListene
 
     private void setShowPopularGenome(boolean show) {
         SimulationParameters p = simulation.getParameters();
-        MoveDirection[] popularGenome = simulation.getMap().popularGenome().getKey();
-
+        MoveDirection[] popularGenome = show ? simulation.getMap().popularGenome().getKey() : null;
         for (int i = 0; i < p.width(); i++) {
             for (int j = 0; j < p.height(); j++) {
-                if (show) {
-                    boolean isPopularGenome = simulation.getMap().isGenomeOnPosition(new Vector2D(i, j), popularGenome);
-                    Vector2D pos = new Vector2D(i, j);
-                    Platform.runLater(() -> {
-                        CellRegion cell = cells.get(pos);
-                        if (cell != null) {
-                            cell.updateIndicator(isPopularGenome);
-                        }
-                    });
-                } else {
-                    CellRegion cell = cells.get(new Vector2D(i, j));
-                    if (cell != null) cell.updateIndicator(false);
+                Vector2D pos = new Vector2D(i, j);
+                CellRegion cell = cells.get(pos);
+                if (cell != null) {
+                    cell.updateIndicator(show && simulation.getMap().isGenomeOnPosition(pos, popularGenome));
                 }
             }
         }
