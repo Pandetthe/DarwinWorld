@@ -49,11 +49,8 @@ public class StageHelper {
         stage.setOnShown(e -> {
             if (oldOnShown != null)
                 oldOnShown.handle(e);
-            Insets windowInsets = StageHelper.getWindowInsets(stage);
-            stage.minWidthProperty().bind(root.minWidthProperty().add(windowInsets.getLeft() + windowInsets.getRight()));
-            stage.minHeightProperty().bind(root.minHeightProperty().add(windowInsets.getTop() + windowInsets.getBottom()));
-            stage.setWidth(stage.getMinWidth());
-            stage.setHeight(stage.getMinHeight());
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
         });
     }
 

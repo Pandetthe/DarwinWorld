@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="rootBorderPane" minHeight="575.0" minWidth="850.0" stylesheets="@theme.css, @styles.css"
+<BorderPane fx:id="rootBorderPane" minHeight="500.0" minWidth="750.0" stylesheets="@theme.css, @styles.css"
             xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="agh.darwinworld.presenters.SimulationPresenter">
     <left>
-        <VBox fx:id="leftVBox" prefWidth="350.0" spacing="10" BorderPane.alignment="CENTER">
+        <VBox fx:id="leftVBox" minWidth="300.0" prefWidth="350.0" maxWidth="400.0" spacing="10" BorderPane.alignment="CENTER">
             <GridPane alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS" minWidth="150.0"/>

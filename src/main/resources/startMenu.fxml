@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="rootBorderPane" minHeight="880.0" minWidth="1000.0" styleClass="start"
+<BorderPane fx:id="rootBorderPane" minHeight="620.0" minWidth="900.0" styleClass="start"
             stylesheets="@theme.css, @styles.css" xmlns="http://javafx.com/javafx/11.0.14-internal"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.darwinworld.presenters.StartMenuPresenter">
     <right>
         <GridPane alignment="CENTER" hgap="10.0" styleClass="background" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints maxWidth="200.0" minWidth="200.0"/>
-                <ColumnConstraints maxWidth="180.0" minWidth="180.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" prefWidth="200.0"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="150.0" prefWidth="180.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints valignment="BOTTOM" vgrow="ALWAYS"/>
@@ -55,7 +55,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="heightIntField" text="25" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="heightIntField" text="25" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -67,7 +67,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="widthIntField" text="50" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="widthIntField" text="50" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="2">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -79,7 +79,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="startingPlantAmountIntField" text="15" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="startingPlantAmountIntField" text="15" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="3">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -91,7 +91,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="plantGrowingAmountIntField" text="10" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="plantGrowingAmountIntField" text="10" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="4">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -103,7 +103,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="plantEnergyAmountIntField" text="15" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="plantEnergyAmountIntField" text="15" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="5">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -115,7 +115,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="startingAnimalAmountIntField" text="10" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="startingAnimalAmountIntField" text="10" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="6">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -127,7 +127,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="startingEnergyAmountIntField" text="40" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="startingEnergyAmountIntField" text="40" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="7">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -140,7 +140,7 @@
                 </GridPane.margin>
             </Label>
             <IntField fx:id="minimumBreedingEnergyIntField" text="15" GridPane.columnIndex="1"
-                      GridPane.halignment="LEFT" GridPane.rowIndex="8">
+                      GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
@@ -151,7 +151,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="breedingEnergyCostIntField" text="10" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="breedingEnergyCostIntField" text="10" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="9">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -163,7 +163,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="minimumMutationAmountIntField" text="4" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="minimumMutationAmountIntField" text="4" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="10">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -176,7 +176,7 @@
                 </GridPane.margin>
             </Label>
             <IntField fx:id="maximumMutationAmountIntField" text="10" GridPane.columnIndex="1"
-                      GridPane.halignment="LEFT" GridPane.rowIndex="11">
+                      GridPane.hgrow="ALWAYS" GridPane.rowIndex="11">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
@@ -187,7 +187,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="animalGenomeLengthIntField" text="10" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="animalGenomeLengthIntField" text="10" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="12">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -198,8 +198,8 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <ComboBox fx:id="mapTypeComboBox" minWidth="180.0" onAction="#onMapTypeSelectionChanged" prefWidth="150.0"
-                      GridPane.columnIndex="1" GridPane.rowIndex="13">
+            <ComboBox fx:id="mapTypeComboBox" minWidth="150.0" maxWidth="Infinity" onAction="#onMapTypeSelectionChanged"
+                      GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
@@ -209,7 +209,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="fireIntervalIntField" text="100" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="fireIntervalIntField" text="100" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="14">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -220,7 +220,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="fireLengthIntField" text="5" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="fireLengthIntField" text="5" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="15">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -232,8 +232,8 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <ComboBox layoutX="199.0" layoutY="542.0" minWidth="180.0" prefWidth="150.0" value="Normal"
-                      GridPane.columnIndex="1" GridPane.rowIndex="16" fx:id="behaviourComboBox">
+            <ComboBox minWidth="150.0" maxWidth="Infinity"
+                      GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="16" fx:id="behaviourComboBox">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
@@ -244,7 +244,7 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="refreshTimeIntField" text="100" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+            <IntField fx:id="refreshTimeIntField" text="100" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                       GridPane.rowIndex="17">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
@@ -256,8 +256,8 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <IntField fx:id="seedIntField" maxWidth="135.0" text="1" GridPane.columnIndex="1" GridPane.halignment="LEFT"
-                      GridPane.rowIndex="18">
+            <IntField fx:id="seedIntField" maxWidth="Infinity" text="1" GridPane.columnIndex="1"
+                      GridPane.hgrow="ALWAYS" GridPane.rowIndex="18">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
@@ -274,8 +274,8 @@
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
             </Label>
-            <Button fx:id="csvButton" onAction="#onSaveToCSV" prefWidth="135.0" styleClass="button-outlined"
-                    text="Choose" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="19">
+            <Button fx:id="csvButton" onAction="#onSaveToCSV" maxWidth="Infinity" styleClass="button-outlined"
+                    text="Choose" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="19">
                 <GridPane.margin>
                     <Insets bottom="5.0" top="5.0"/>
                 </GridPane.margin>
